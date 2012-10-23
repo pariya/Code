@@ -1,0 +1,13 @@
+library(base)
+library(tmvtnorm)
+library(glasso)
+library(simone)
+library(Matrix)
+
+setwd("~/Github/PariyaCode")
+data <- read.csv("tests/test_data.txt",sep="\t")
+source("R/gnet.R")
+source("R/calculate.cutoffs.R")
+source("R/calculate.lower.upper.R")
+source("R/calculate.R.R")
+results <- gnet(data,1,1,1)
