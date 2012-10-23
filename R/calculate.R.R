@@ -15,7 +15,8 @@ calculate.R = function(y,sigma,lower.upper,gibbs.iter=1000){
   lower.upper<-calculate.lower.upper(y)
   cl <- startCluster(rep("localhost",20))
   items <- list(1:n)
-  parLapply(cl, items, function(i){
+  for(i in 1:n){
+  
     cat("calc.R -> ",i,"/",n,"\n")
     s <- proc.time()
     z <- rtmvnorm(n=gibbs.iter, sigma=sigma, lower=lower.upper$lower[i,], upper=lower.upper$upper[i,], algorithm="gibbsR")
