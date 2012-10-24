@@ -12,4 +12,6 @@ source("R/gnet.R")
 source("R/calculate.cutoffs.R")
 source("R/calculate.lower.upper.R")
 source("R/calculate.R.R")
-results <- gnet(data,1,1,1)
+#results <- gnet(data,1,1,1)
+
+results <- gnet(data,2,1,1,n.cores=2)

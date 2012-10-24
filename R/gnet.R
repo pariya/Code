@@ -22,6 +22,25 @@ gnet = function(y, n.rho=10, em.iter=10, gibbs.iter=1000, n.cores=1){
       results$Theta[[i]] <- Matrix(R.gl$wi)
       results$loglik     = c(results$loglik,R.gl$loglik)
     }
+  }else{
+    eff.cores <- min(n.cores, n.rho)
+    if(eff.cores != n.cores) warning("Reduced the number of cores to",eff.cores,"otherwise we'd crash some cores without work")
+    cl <- makeCluster(rep("localhost",eff.cores))
+    clusterEvalQ(cl, library(base))
+    clusterEvalQ(cl, library(tmvtnorm))
+    clusterEvalQ(cl, library(glasso))
+    clusterEvalQ(cl, library(simone))
+    clusterEvalQ(cl, library(Matrix))
+    clusterEvalQ(cl, source("R/gnet.R"))
+    clusterEvalQ(cl, source("R/calculate.cutoffs.R"))
+    clusterEvalQ(cl, source("R/calculate.lower.upper.R"))
+    clusterEvalQ(cl, source("R/calculate.R.R"))
+    allR.gl <- parLapply(cl, 1:n.rho, get("calculate.Theta"), y=y, rho=rho, lower.upper=lower.upper, em.iter=em.iter, gibbs.iter=gibbs.iter)
+    for(i in 1:n.rho){
+      results$Theta[[i]] <- Matrix(allR.gl[[i]]$wi)
+      results$loglik     = c(results$loglik,allR.gl[[i]]$loglik)
+    }
+    stopCluster(cl)
   }
   return(results)
 }
