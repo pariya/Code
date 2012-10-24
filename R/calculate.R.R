@@ -9,9 +9,16 @@
 #
 
 calculate.R = function(y, sigma, lower.upper, gibbs.iter=1000, verbose = FALSE){
+  if(missing(y)) stop("argument \"y\" is missing, with no default")
   S <- 0
   p <- ncol(y)
   n <- nrow(y)
+  if(missing(sigma)){
+    warning("Recalculating sigma from start")
+    sigma <- diag(rep(1,p))
+  }
+  if(missing(lower.upper)) lower.upper <- calculate.lower.upper(y)
+  
   for(i in 1:n){
     if(verbose) cat("calc.R -> ",i,"/",n,"\n")
     s <- proc.time()
