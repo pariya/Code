@@ -5,7 +5,7 @@
 # last modified Oct, 2012
 # first written Oct, 2012
 # 
-# calculate.R
+# calculate.R - function to calculate something
 #
 
 calculate.R = function(y, sigma, lower.upper, gibbs.iter=1000, verbose = FALSE){
@@ -14,7 +14,7 @@ calculate.R = function(y, sigma, lower.upper, gibbs.iter=1000, verbose = FALSE){
   p <- ncol(y)
   n <- nrow(y)
   if(missing(sigma)){
-    warning("Recalculating sigma from start")
+    warning("sigma is taken matrix I")
     sigma <- diag(rep(1,p))
   }
   if(missing(lower.upper)) lower.upper <- calculate.lower.upper(y)
@@ -29,7 +29,7 @@ calculate.R = function(y, sigma, lower.upper, gibbs.iter=1000, verbose = FALSE){
       if(verbose) cat("Gibbs:",iteration,"/",gibbs.iter,"\n")
       summed <- summed + (z[iteration,] %*% t(z[iteration,]))
     }
-    if(verbose) cat("calculating new S\n")
+    if(verbose) cat("calculating new S \n")
     S = S + (summed / gibbs.iter)
   }
   return(cov2cor(S))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
