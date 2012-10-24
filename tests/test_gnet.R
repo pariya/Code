@@ -3,6 +3,7 @@ library(tmvtnorm)
 library(glasso)
 library(simone)
 library(Matrix)
+library(snow)
 
 setwd("C:/Users/Pariya/Desktop/crucialCommands/Codes/Code")
 #setwd("~/Github/PariyaCode")
