@@ -18,7 +18,7 @@ gnet = function(y, n.rho=10, em.iter=10, gibbs.iter=1000, n.cores=1){
   results = list(Theta=list(), loglik=NULL, rho=rho)
   if(n.cores==1){
     for(i in 1:n.rho){ #PARRALEL  20 x NODES
-      R.gl <- calculate.Theta(i,y,rho,lower.upper, em.iter, gibbs.iter)
+      R.gl <- calculate.EM(i, y, rho,lower.upper, em.iter, gibbs.iter)
       results$Theta[[i]] <- Matrix(R.gl$wi)
       results$loglik     = c(results$loglik,R.gl$loglik)
     }
@@ -45,13 +45,14 @@ gnet = function(y, n.rho=10, em.iter=10, gibbs.iter=1000, n.cores=1){
   return(results)
 }
 
-calculate.Theta <- function(i, y, rho, lower.upper, em.iter = 10, gibbs.iter=1000){
+calculate.EM <- function(i, y, rho, lower.upper, em.iter = 10, gibbs.iter=1000){
   cat("Calculation of Rho", i,"\n")
   p = ncol(y)
   sigma.ini = diag(rep(1,p))
+  if(missing(lower.upper)) lower.upper <- calculate.lower.upper(y)
   for (j in 1:em.iter){
     s <- proc.time()
-    cat("Start of iteration",j,"\n")
+    cat("Start of em.iter",j, "/", em.iter,"\n")
     R    <- calculate.R(y, sigma.ini, lower.upper, gibbs.iter)
     R.gl <- glasso(R, rho[i], penalize.diagonal=FALSE)
     sigma.ini <- R.gl$w
